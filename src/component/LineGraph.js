@@ -15,7 +15,7 @@ const options={
         intersect:false,
         callbacks:{
             label:function(tooltipItem,data){
-                return FormatListNumberedRtlSharp(tooltipItem.value).format("+0,0");
+                return numeral(tooltipItem.value).format("+0,0");
             }
         }
     },
@@ -42,7 +42,7 @@ const options={
     }
 }
 function LineGraph() {
-    const [data,setData]=useState([]);
+    const [data,setData]=useState({});
     const buildChartData=data=>{
         const chartData=[];
         let lastDatapoint;
@@ -70,19 +70,21 @@ function LineGraph() {
     
     return (
         <div>
-            <h1>I'm a graph</h1>
-           <Line
-           options={options}
-           data={{
-               datasets:[{
-                data:data,
-                backgroundColor:"rgba(204,16,52,0.2)",
-                borderColor:"#CC1034"
-               }
-                  
-               ]
-           }}
-           options/> 
+            {data?.length>0 && (
+                 <Line
+                 options={options}
+                 data={{
+                     datasets:[{
+                      data:data,
+                      backgroundColor:"rgba(204,16,52,0.2)",
+                      borderColor:"#CC1034"
+                     }
+                        
+                     ]
+                 }}
+                 /> 
+            )}
+           
         </div>
     )
 }

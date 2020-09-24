@@ -7,12 +7,16 @@ import Map from './component/Map'
 import Table from './component/Table'
 import {sortData} from './util'
 import LineGraph from './component/LineGraph'
+import "leaflet/dist/leaflet.css";
 //https://disease.sh/v3/covid-19/continents
 function App() {
   const [countries, setCountries] = useState([]);
   const [country,setCountry]=useState('worldwide');
   const [countryInfo,setCountryInfo]=useState([]);
   const [tableData,setTableData]=useState([]);
+  const [mapCenter,setMapcenter]=useState({lat:34.80746,lng:-40.4796})
+  const[mapZoom,setMapZoom]=useState(3);
+  const[mapCountries,setMapCountries]=useState([]);
   useEffect(()=>{
       fetch('https://disease.sh/v3/covid-19/all')
       .then(res=>res.json())
@@ -32,7 +36,7 @@ function App() {
      )) ;
      setCountries(countries);
      const sortedData=sortData(res.data);
-   
+     setMapCountries(res.data);
      setTableData(sortedData);
   })
   .catch((err)=>{
@@ -54,6 +58,8 @@ getCountries();
      .then(data=>{
        setCountry(countryCode);
        setCountryInfo(data);
+       data.countryInfo && setMapcenter([data.countryInfo?.lat,data.countryInfo?.long]);
+       setMapZoom(4);
      })
   }
   console.log(countryInfo)
@@ -83,9 +89,10 @@ getCountries();
          <InfoBox title="Coronavirus Cases" total={countryInfo?.cases} cases={countryInfo?.todayCases}/>
          <InfoBox title="Recovered"  total={countryInfo?.recovered} cases={countryInfo?.todayRecovered}/>
          <InfoBox title="Deaths"  total={countryInfo?.deaths} cases={countryInfo?.todayDeaths} />
-
+        
       </div>
-      
+      <Map countries={mapCountries} center={mapCenter}
+      zoom={mapZoom}/>
       </div>
      <div className="app__right">
        <Card>
@@ -94,10 +101,11 @@ getCountries();
            <Table countries={tableData}>
 
            </Table>
-           <h3>Live cases</h3>
+           <h3>Worldwide new cases</h3>
          </CardContent>
+         <LineGraph/>
        </Card>
-       <LineGraph/>
+      
      </div>
       
     </div>
