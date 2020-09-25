@@ -28,6 +28,9 @@ export const sortData=(data)=>{
    })
    return sortedData;
 };
+export const prettyprintstat=(stat)=>
+    stat?`+${numeral(stat).format("0,0a")}`:"+0";
+
 export  const showDataOnMap=(data,casesType="cases")=>(
     data.map(country=>(
      <Circle
@@ -39,6 +42,7 @@ export  const showDataOnMap=(data,casesType="cases")=>(
          Math.sqrt(country[casesType]) * casesTypeColors[casesType].multiplier
      }
      >
+          
       <Popup>
           <div className="info-container">
           <div
@@ -63,6 +67,7 @@ export  const showDataOnMap=(data,casesType="cases")=>(
           </div>
           
       </Popup>
+  
      </Circle>
 
     ))
